@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import api from '@/lib/api';
+import api from '../lib/api';
 import toast from 'react-hot-toast';
 
 // Define the shape of our User object
@@ -24,19 +24,23 @@ interface AuthActions {
   login: (userData: User, token: string) => void;
   logout: () => void;
   setLoading: (isLoading: boolean) => void;
-  // We'll add registerUser and loginUser actions in the next step
+  updateUser: (userData: Partial<User>) => void;
 }
+
+// Initial state for SSR
+const initialState: AuthState = {
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  isLoading: false,
+};
 
 // Create the store
 export const useAuthStore = create<AuthState & AuthActions>()(
-  // persist middleware wraps our store definition
   persist(
-    (set) => ({
+    (set, get) => ({
       // --- Initial State ---
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false,
+      ...initialState,
 
       // --- Actions ---
       setLoading: (isLoading) => set({ isLoading }),
@@ -50,7 +54,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           isLoading: false,
         });
         // Set token for our api interceptor
-        localStorage.setItem('auth-token', token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth-token', token);
+        }
       },
 
       logout: () => {
@@ -59,42 +65,39 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           user: null,
           token: null,
           isAuthenticated: false,
+          isLoading: false,
         });
         // Remove token from local storage
-        localStorage.removeItem('auth-token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth-token');
+        }
         toast.success('Logged out successfully');
+      },
+
+      updateUser: (userData) => {
+        const currentUser = get().user;
+        if (currentUser) {
+          set({
+            user: { ...currentUser, ...userData },
+          });
+        }
       },
     }),
     {
       // Configuration for persistence
-      name: 'auth-storage', // Name of the item in localStorage
-      storage: createJSONStorage(() => localStorage), // Use localStorage
-      // We only want to persist the 'user' and 'token'
-      partialize: (state) => ({ user: state.user, token: state.token }),
-      // Re-hydrate the state
+      name: 'auth-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+      }),
       onRehydrateStorage: () => (state) => {
-        if (state?.token) {
-          set({ isAuthenticated: true });
-          // Re-set token for the api interceptor on page load
+        if (state?.token && typeof window !== 'undefined') {
           localStorage.setItem('auth-token', state.token);
         }
       },
+      skipHydration: false,
     }
   )
 );
-
-// --- Custom Hooks for convenience ---
-
-// Hook to get actions
-export const useAuthActions = () => useAuthStore((state) => ({
-  login: state.login,
-  logout: state.logout,
-  setLoading: state.setLoading,
-}));
-
-// Hook to get state
-export const useAuthUser = () => useAuthStore((state) => ({
-  user: state.user,
-  isAuthenticated: state.isAuthenticated,
-  isLoading: state.isLoading,
-}));

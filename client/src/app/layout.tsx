@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark"> {/* We'll use a dark theme */}
+    <html lang="en">
       <body className={inter.className}>
         <main>{children}</main>
         {/* This component handles rendering all notifications */}

@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '@/lib/api';
-import { useAuthActions, useAuthUser } from '@/store/auth.store';
+import { useAuthStore } from '@/store/auth.store';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 
@@ -19,8 +19,12 @@ type LoginFormData = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, setLoading } = useAuthActions();
-  const { isLoading, isAuthenticated } = useAuthUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Get store values directly - no custom hooks
+  const login = useAuthStore((state) => state.login);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const {
     register,
@@ -30,16 +34,21 @@ export default function LoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
+  // Handle mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Redirect if already logged in
-  React.useEffect(() => {
-    if (isAuthenticated) {
+  useEffect(() => {
+    if (mounted && isAuthenticated) {
       router.push('/dashboard');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
 
   // Handle form submission
   const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await api.post('/auth/login', data);
 
@@ -54,9 +63,20 @@ export default function LoginPage() {
       console.error(error);
       const message = error.response?.data?.message || 'Login failed';
       toast.error(message);
-      setLoading(false);
+      setIsLoading(false);
     }
   };
+
+  // Don't render until mounted to avoid hydration issues
+  if (!mounted) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background p-4">
+        <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-lg">
+          <div className="h-96 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen items-center justify-center bg-background p-4">
@@ -106,7 +126,7 @@ export default function LoginPage() {
               </p>
             )}
           </div>
-          <Button type="submit" className="w-full" isLoading={isLoading}>
+          <Button type="submit" className="w-full" >
             Login
           </Button>
         </form>
