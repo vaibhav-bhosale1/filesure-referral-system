@@ -54,8 +54,8 @@ export const simulatePurchase = async (req: Request, res: Response) => {
         purchasingUser.credits += 2;
         
         // 6. Update statuses to prevent future credits for this pair
-        purchasingUser.hasMadeFirstPurchase = true; [cite: 37]
-        referral.status = 'converted'; [cite: 33]
+        purchasingUser.hasMadeFirstPurchase = true; 
+        referral.status = 'converted'; 
 
         await purchasingUser.save({ session });
         await referral.save({ session });

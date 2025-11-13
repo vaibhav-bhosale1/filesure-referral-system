@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db';
 import authRoutes from './routes/auth.routes';
+import purchaseRoutes from './routes/purchase.routes';  
+import dashboardRoutes from './routes/dashboard.routes'
 
 // Load environment variables
 dotenv.config();
@@ -31,6 +33,8 @@ app.get('/api/health', (req: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/purchase', purchaseRoutes);  
+app.use('/api/dashboard', dashboardRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
