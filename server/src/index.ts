@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5001;
 // Allow cross-origin requests from our frontend
 app.use(
   cors({
-    origin: 'http://localhost:3000', // We'll set our frontend to run on port 3000
+    origin: 'https://filesure-referral-system-zeta.vercel.app', // We'll set our frontend to run on port 3000
     credentials: true,
   })
 );
