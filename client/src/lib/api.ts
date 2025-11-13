@@ -2,10 +2,9 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:5001/api', // Our backend URL
+  baseURL: 'https://filesure-referral-system-d0vy.onrender.com', // Our backend URL
   withCredentials: true, // Allows cookies to be sent
 });
-
 
 api.interceptors.request.use((config) => {
 
