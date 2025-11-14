@@ -2,7 +2,7 @@
 
 This is a full-stack intern assignment project for FileSure. It implements a referral and credit system for a digital product platform. The goal is to allow users to register, share a referral link, and earn credits when their referrals make a purchase.
 
-**[Live Demo Link]** - (Add your deployed Vercel/Render link here)
+**[Live Demo Link]** - https://filesure-referral-system-zeta.vercel.app/
 
 ---
 
