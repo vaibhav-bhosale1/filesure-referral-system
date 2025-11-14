@@ -226,8 +226,8 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@your-username](https://github.com/vaibhav-bhosale1)
-- LinkedIn: [Your LinkedIn](https://www.linkedin.com/in/vaibhav-bhosale-0a2b13259/)
+- GitHub: [vaibhav-bhosale1](https://github.com/vaibhav-bhosale1)
+- LinkedIn: [vaibhavbhosale](https://www.linkedin.com/in/vaibhav-bhosale-0a2b13259/)
 
 ---
 
