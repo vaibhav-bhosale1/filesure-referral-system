@@ -31,7 +31,7 @@ export const getDashboardData = async (req: Request, res: Response) => {
     const totalCreditsEarned = user.credits;
     
     // 5. Get the unique referral link [cite: 43]
-    const referralLink = `https://yourapp.com/register?r=${user.referralCode}`; // [cite: 16]
+    const referralLink = `https://filesure-referral-system-zeta.vercel.app/register?r=${user.referralCode}`; // [cite: 16]
 
     res.status(200).json({
       totalReferredUsers,
