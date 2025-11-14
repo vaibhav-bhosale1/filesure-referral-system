@@ -91,7 +91,8 @@ function RegisterForm() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background p-4">
+    <div className="flex h-screen items-center justify-center bg-black
+     p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
